@@ -16,7 +16,13 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Input } from 'react-native-elements';
+import { ListItem } from 'react-native-elements'
+
+
 export default class HomeScreen extends React.Component {
+
   state = {
     tasks: [{id: 1, task: "Go to the Market"}, {id: 2, task: "Finish school"}],
     text: ''
@@ -35,11 +41,14 @@ export default class HomeScreen extends React.Component {
     )
   ))
 
+
   addTask = text =>{
-    
     const tasks = [...this.state.tasks]
-    const newTask = {id: tasks.length +1 , task: text }
-    !tasks.filter(task =>(task.task === newTask.task))[0]  ? tasks.push(newTask) : Alert.alert("This task has already been added")
+    const newTask = {id: tasks.length > 1 && tasks.lenght + 1 , task:text }
+    
+    console.log("textttt>>>>>>>", text , typeof text)
+
+    !tasks.filter(task =>(task.task === newTask.task))[0] ? tasks.push(newTask) : Alert.alert("This task has already been added")
     
     this.setState({ tasks })
     
@@ -59,14 +68,16 @@ export default class HomeScreen extends React.Component {
     
     const tasks = [...this.state.tasks]
     const task = tasks.filter(task =>(task.id === id))
-    text.length !== 0 && !tasks.filter(task =>(task.task === text))[0] ? task.task = this.state.text && tasks.push(task) && console.log(text) : Alert.alert("No change made to task")
+    console.log(">>>>>>>>>>>>",task)
+    text && !tasks.filter(task =>(task.task === text))[0] ? task.task = this.state.text && tasks.push(task) && console.log(text) : Alert.alert("No change made to task")
     
     this.setState({ tasks })
     
   }
 
   render() {
-    console.log(">>>state>>", this.state)
+    console.log(">>>state>>", this.state ,"\n ", this.handleInputChange)
+    
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -84,26 +95,25 @@ export default class HomeScreen extends React.Component {
               React Native Task App
             </Text>
 
-            <TextInput
+            <Input
               style={{height: 40, alignItems: "center", fontSize: 20}}
               placeholder="Add task here !"
-              onChangeText={(text)=>(this.setState({text}))}
-            />
-            <Button
-              onPress={()=>{this.addTask(this.state.text)}}
-              title="Add Task"
-              color="#841584"
-              accessibilityLabel="Learn more about this purple button"
+              name="task"
+              onChangeText={(text)=>(this.setState({ text }))}
+              rightIcon={
+                <Icon
+                  name='plus'
+                  type='entypo'
+                  size={24}
+                  color='black'
+                  onPress={()=>{this.addTask(this.state.text)}}
+                />
+              }
             />
           </View>
           
           {this.renderTasks()}
 
-          {/* <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
-          </View> */}
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
@@ -249,53 +259,52 @@ const styles = StyleSheet.create({
 
 
 const Task = props => {
-  return (
-  // <View style={{padding:0.5}}>
-  //   <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-  //     <Text style={styles.myContainer}>
-  //       {/* <MonoText style={styles.codeHighlightText}> */}
-  //       {props.task.task}
-  //       {/* </MonoText> */}
-  //     </Text>
-  //   </ScrollView>
-  // </View>
-  // <Touchable
-  //   style={styles.option}
-  //   background={Touchable.Ripple('#ccc', false)}
-  //   onPress={this._handlePressDocs}>
-  <ScrollView>
-    <View style={{ flexDirection: 'row' }}>
-      <View style={styles.optionIconContainer}>
-        <Image
-          source={require('../assets/images/yvkb.jpg')}
-          resizeMode="contain"
-          fadeDuration={0}
-          style={{ width: 20, height: 20, marginTop: 1 }}
-        />
-      </View>
-      <View style={styles.optionTextContainer}>
-        <Text style={styles.optionText}>
-        {props.task.task}
-        </Text>
-      </View>
-      <View>
-      <Button 
-      fontSize="15" 
-      marginTop="1"
-      title="Delete Task"
-      color="#841584"
-      onPress={()=>(props.onDelete(props.task.id))} />
-      
-      </View>
-    <View>
-    <Button 
-    title="Update Task"
-    color="#841584"
-    onPress={()=>(props.onUpdate(props.task.id, props.updateText))} />
-      
 
-    </View>
+  console.log("props<<>>>>>", props.task.task, typeof props.task.task, props.task.id)
+  return (
+
+  <ScrollView>
+    <View >
+      
+      <ListItem
+        key={props.task.id}
+        title={props.task.task}
+        subtitle={
+          "#" + props.task.id
+      }
+        leftIcon={
+          <Icon
+          name='list-alt'
+          size={24}
+          color='black'
+
+          />
+        }
+        rightIcon={
+          <React.Fragment>
+  
+            <Icon
+            name='minus-circle'
+            style={{marginLeft: 5}}
+            size={24}
+            color='black'
+            onPress={()=>(props.onDelete(props.task.id))}
+            />
+
+            <Icon
+            name='plus-circle'
+            size={24}
+            style={{marginLeft: 5}}
+            color='black'
+            onPress={()=>(props.onUpdate(props.task.id, props.updateText))}
+            />
+
+          </React.Fragment>
+        }
+      />
+ 
     </View>
   </ScrollView>
   )
 }
+
