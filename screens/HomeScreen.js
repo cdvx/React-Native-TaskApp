@@ -44,7 +44,7 @@ export default class HomeScreen extends React.Component {
 
   addTask = text =>{
     const tasks = [...this.state.tasks]
-    const newTask = {id: tasks.length > 1 && tasks.lenght + 1 , task:text }
+    const newTask = {id: tasks.length + 1 , task:text }
     
     console.log("textttt>>>>>>>", text , typeof text)
 
@@ -69,7 +69,7 @@ export default class HomeScreen extends React.Component {
     const tasks = [...this.state.tasks]
     const task = tasks.filter(task =>(task.id === id))
     console.log(">>>>>>>>>>>>",task)
-    text && !tasks.filter(task =>(task.task === text))[0] ? task.task = this.state.text && tasks.push(task) && console.log(text) : Alert.alert("No change made to task")
+    text && !tasks.filter(task =>(task.task === text))[0] ? tasks.push(task) && console.log(text) : Alert.alert("No change made to task")
     
     this.setState({ tasks })
     
@@ -85,8 +85,8 @@ export default class HomeScreen extends React.Component {
             <Image
               source={
                 __DEV__
-                  ? require('../assets/images/yvkb.jpg')
-                  : require('../assets/images/robot-prod.png')
+                  ? require('../assets/images/robot-prod.png')
+                  : require('../assets/images/yvkb.jpg')
               }
               style={styles.welcomeImage}
             />
@@ -117,11 +117,7 @@ export default class HomeScreen extends React.Component {
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
+          <Text style={styles.tabBarInfoText}>React Native TaskApp</Text>
         </View>
       </View>
     );
